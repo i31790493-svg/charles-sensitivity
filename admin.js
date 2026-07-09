@@ -1,4 +1,10 @@
-import { db } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
+
+import {
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 import {
   collection,
   addDoc,
@@ -7,8 +13,16 @@ import {
   doc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// Protect admin page
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+  }
+});
+
 const saveBtn = document.getElementById("saveBtn");
 const phoneList = document.getElementById("phoneList");
+const logoutBtn = document.getElementById("logoutBtn");
 
 async function loadPhones() {
   phoneList.innerHTML = "";
@@ -44,7 +58,7 @@ window.deletePhone = async (id) => {
 saveBtn.addEventListener("click", async () => {
 
   await addDoc(collection(db, "phones"), {
-    phone: document.getElementById("phone").value.toLowerCase(),
+    phone: document.getElementById("phone").value.trim().toLowerCase(),
     general: Number(document.getElementById("general").value),
     redDot: Number(document.getElementById("redDot").value),
     scope2x: Number(document.getElementById("scope2x").value),
@@ -56,6 +70,12 @@ saveBtn.addEventListener("click", async () => {
   alert("✅ Phone Saved!");
 
   loadPhones();
+});
+
+// Logout
+logoutBtn.addEventListener("click", async () => {
+  await signOut(auth);
+  window.location.href = "login.html";
 });
 
 loadPhones();
