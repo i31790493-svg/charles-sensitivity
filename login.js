@@ -5,11 +5,13 @@ const loginBtn = document.getElementById("loginBtn");
 const message = document.getElementById("message");
 
 loginBtn.addEventListener("click", async () => {
-  const email = document.getElementById("email").value.trim();
+
+  const email = "peacepearl2011@gmail.com";
   const password = document.getElementById("password").value;
 
-  if (!email || !password) {
-    message.textContent = "Please enter your email and password.";
+  if (!password) {
+    message.style.color = "red";
+    message.textContent = "Please enter your password.";
     return;
   }
 
@@ -17,7 +19,7 @@ loginBtn.addEventListener("click", async () => {
     await signInWithEmailAndPassword(auth, email, password);
 
     message.style.color = "green";
-    message.textContent = "Login successful! Redirecting...";
+    message.textContent = "✅ Login successful!";
 
     setTimeout(() => {
       window.location.href = "admin.html";
@@ -25,6 +27,7 @@ loginBtn.addEventListener("click", async () => {
 
   } catch (error) {
     message.style.color = "red";
-    message.textContent = "Invalid email or password.";
+    message.textContent = "❌ Incorrect password.";
   }
+
 });
