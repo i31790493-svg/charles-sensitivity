@@ -1,0 +1,132 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    color:white;
+    background:linear-gradient(45deg,#ff0000,#ff9900,#0066ff,#9900ff,#00ff99);
+    background-size:400% 400%;
+    animation:moveBg 10s infinite;
+}
+
+
+@keyframes moveBg{
+
+0%{
+background-position:0% 50%;
+}
+
+50%{
+background-position:100% 50%;
+}
+
+100%{
+background-position:0% 50%;
+}
+
+}
+
+
+header{
+    text-align:center;
+    padding:40px 20px;
+}
+
+
+header h1{
+
+font-size:32px;
+
+text-shadow:
+0 0 10px cyan,
+0 0 20px cyan;
+
+}
+
+
+header p{
+
+margin-top:10px;
+font-size:17px;
+
+}
+
+
+
+.search-box{
+
+width:90%;
+max-width:500px;
+margin:auto;
+text-align:center;
+
+}
+
+
+.search-box input{
+
+width:100%;
+padding:15px;
+border:none;
+border-radius:10px;
+font-size:16px;
+
+}
+
+
+
+.search-box button{
+
+margin-top:15px;
+width:100%;
+padding:15px;
+border:none;
+border-radius:10px;
+
+background:#00ff88;
+font-size:18px;
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+
+
+.search-box button:hover{
+
+transform:scale(1.05);
+
+}
+
+
+
+#result{
+
+width:90%;
+max-width:500px;
+
+margin:30px auto;
+
+padding:20px;
+
+background:rgba(0,0,0,0.4);
+
+border-radius:15px;
+
+backdrop-filter:blur(10px);
+
+}
+
+
+
+footer{
+
+text-align:center;
+margin-top:50px;
+
+}
