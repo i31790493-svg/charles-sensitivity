@@ -13,7 +13,7 @@ import {
   doc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Protect admin page
+// Protect Admin Page
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "login.html";
@@ -24,39 +24,45 @@ const saveBtn = document.getElementById("saveBtn");
 const phoneList = document.getElementById("phoneList");
 const logoutBtn = document.getElementById("logoutBtn");
 
+// Load Phones
 async function loadPhones() {
   phoneList.innerHTML = "";
 
-  const querySnapshot = await getDocs(collection(db, "phones"));
+  try {
+    const snapshot = await getDocs(collection(db, "phones"));
 
-  querySnapshot.forEach((phone) => {
-    const data = phone.data();
+    snapshot.forEach((phoneDoc) => {
+      const phone = phoneDoc.data();
 
-    phoneList.innerHTML += `
-      <div style="border:1px solid #444;padding:10px;margin:10px 0;">
-        <h3>${data.phone}</h3>
-        <p>General: ${data.general}</p>
-        <p>Red Dot: ${data.redDot}</p>
-        <p>2× Scope: ${data.scope2x}</p>
-        <p>4× Scope: ${data.scope4x}</p>
-        <p>Sniper: ${data.sniper}</p>
-        <p>Free Look: ${data.freeLook}</p>
+      phoneList.innerHTML += `
+        <div style="border:1px solid #444;padding:10px;margin:10px 0;border-radius:8px;">
+          <h3>${phone.phone}</h3>
 
-        <button onclick="deletePhone('${phone.id}')">
-          🗑 Delete
-        </button>
-      </div>
-    `;
-  });
+          <p>General: ${phone.general}</p>
+          <p>Red Dot: ${phone.redDot}</p>
+          <p>2× Scope: ${phone.scope2x}</p>
+          <p>4× Scope: ${phone.scope4x}</p>
+          <p>Sniper: ${phone.sniper}</p>
+          <p>Free Look: ${phone.freeLook}</p>
+
+          <button onclick="deletePhone('${phoneDoc.id}')">
+            🗑 Delete
+          </button>
+        </div>
+      `;
+    });
+
+  } catch (error) {
+    alert("Failed to load phones.\n\n" + error.message);
+    console.error(error);
+  }
 }
 
-window.deletePhone = async (id) => {
-  await deleteDoc(doc(db, "phones", id));
-  loadPhones();
-};
-
+// Save Phone
 saveBtn.addEventListener("click", async () => {
+
   try {
+
     await addDoc(collection(db, "phones"), {
       phone: document.getElementById("phone").value.trim().toLowerCase(),
       general: Number(document.getElementById("general").value),
@@ -68,18 +74,39 @@ saveBtn.addEventListener("click", async () => {
     });
 
     alert("✅ Phone Saved!");
+
+    document.getElementById("phone").value = "";
+    document.getElementById("general").value = "";
+    document.getElementById("redDot").value = "";
+    document.getElementById("scope2x").value = "";
+    document.getElementById("scope4x").value = "";
+    document.getElementById("sniper").value = "";
+    document.getElementById("freeLook").value = "";
+
     loadPhones();
 
   } catch (error) {
-    alert("Error: " + error.message);
+
+    alert("❌ Error\n\n" + error.message);
     console.error(error);
+
   }
+
 });
 
-  alert("✅ Phone Saved!");
+// Delete Phone
+window.deletePhone = async (id) => {
 
-  loadPhones();
-});
+  if (!confirm("Delete this phone?")) return;
+
+  try {
+    await deleteDoc(doc(db, "phones", id));
+    loadPhones();
+  } catch (error) {
+    alert("Delete failed.\n\n" + error.message);
+  }
+
+};
 
 // Logout
 logoutBtn.addEventListener("click", async () => {
@@ -87,4 +114,5 @@ logoutBtn.addEventListener("click", async () => {
   window.location.href = "login.html";
 });
 
+// Start
 loadPhones();
