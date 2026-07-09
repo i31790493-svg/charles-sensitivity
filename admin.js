@@ -56,16 +56,25 @@ window.deletePhone = async (id) => {
 };
 
 saveBtn.addEventListener("click", async () => {
+  try {
+    await addDoc(collection(db, "phones"), {
+      phone: document.getElementById("phone").value.trim().toLowerCase(),
+      general: Number(document.getElementById("general").value),
+      redDot: Number(document.getElementById("redDot").value),
+      scope2x: Number(document.getElementById("scope2x").value),
+      scope4x: Number(document.getElementById("scope4x").value),
+      sniper: Number(document.getElementById("sniper").value),
+      freeLook: Number(document.getElementById("freeLook").value)
+    });
 
-  await addDoc(collection(db, "phones"), {
-    phone: document.getElementById("phone").value.trim().toLowerCase(),
-    general: Number(document.getElementById("general").value),
-    redDot: Number(document.getElementById("redDot").value),
-    scope2x: Number(document.getElementById("scope2x").value),
-    scope4x: Number(document.getElementById("scope4x").value),
-    sniper: Number(document.getElementById("sniper").value),
-    freeLook: Number(document.getElementById("freeLook").value)
-  });
+    alert("✅ Phone Saved!");
+    loadPhones();
+
+  } catch (error) {
+    alert("Error: " + error.message);
+    console.error(error);
+  }
+});
 
   alert("✅ Phone Saved!");
 
